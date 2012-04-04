@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+   Firefox Bookmarks Importer for Tint Browser
+  
+   Copyright (C) 2012 - to infinity and beyond J. Devauchelle and contributors.
+ 
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public License
+   version 3 as published by the Free Software Foundation.
+ 
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/PreferenceCategoryGeneral">
+        
+    	<EditTextPreference
+		    android:defaultValue="Firefox"
+		    android:key="PREFERENCE_FOLDER_NAME"
+		    android:summary="@string/PreferenceGeneralFolderNameSummary"
+		    android:title="@string/PreferenceGeneralFolderNameTitle" />
+	
+	</PreferenceCategory>
+	
+    <PreferenceCategory android:title="@string/PreferenceCategoryDataManagement">
+        
+        <Preference
+            android:key="PREFERENCE_RESET_DATA"
+            android:summary="@string/PreferenceGeneralResetDataSummary"
+		    android:title="@string/PreferenceGeneralResetDataTitle" />
+        
+    </PreferenceCategory>
+
+</PreferenceScreen>

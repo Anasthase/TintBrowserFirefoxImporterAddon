@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+   Firefox Bookmarks Importer for Tint Browser
+  
+   Copyright (C) 2012 - to infinity and beyond J. Devauchelle and contributors.
+ 
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public License
+   version 3 as published by the Free Software Foundation.
+ 
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ -->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.tint.firefoximporter"
+    android:installLocation="auto"    
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk android:minSdkVersion="14" />
+    
+    <uses-permission android:name="android.permission.INTERNET" />
+    
+    <uses-permission android:name="org.tint.permissions.bookmarksprovider.READ" />
+    <uses-permission android:name="org.tint.permissions.bookmarksprovider.WRITE" />
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/AddonName" >
+        
+        <service
+            android:name=".AddonService"
+            android:permission="org.tint.permissions.services.ADDONS"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="org.tint.intent.action.ADDON" />
+                <category android:name="org.tint.intent.category.FIREFOX_IMPORTER" />
+            </intent-filter>
+        </service>
+        
+        <activity android:name=".ui.PreferencesActivity"></activity>
+        <activity android:name=".ui.ErrorDetailsActivity" android:theme="@android:style/Theme.Holo.DialogWhenLarge"></activity>
+        
+        <provider android:name=".model.WeaveContentProvider" android:authorities="org.tint.firefoximporter.model.weavecontentprovider"></provider>
+        
+    </application>    
+
+</manifest>

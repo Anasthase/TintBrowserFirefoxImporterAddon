@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+   Firefox Bookmarks Importer for Tint Browser
+  
+   Copyright (C) 2012 - to infinity and beyond J. Devauchelle and contributors.
+ 
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public License
+   version 3 as published by the Free Software Foundation.
+ 
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ -->
+
+<resources>
+
+    <string name="AddonName">Firefox Bookmarks Importer</string>
+    <string name="AddonShortDescription">Get your Firefox bookmarks in Tint Browser!</string>
+    <string name="AddonDescription">This addon retrieve your bookmarks from Firefox Sync service into Tint Browser\'s bookmarks. It uses code from the project Shaman ( https://github.com/emergentdotorg/shaman ), licensed under the Apache v2 license. This addon itself is licensed under the GPLv3 license.</string>
+    <!-- Contact can be email or and url -->
+    <string name="AddonContact">http://www.myaddon.org/</string>
+    
+    <string name="Yes">Yes</string>
+    <string name="No">No</string>
+    
+    <string name="PreferenceHeaderGeneralSettingsTitle">General</string>
+    <string name="PreferenceHeaderCredentialsSettingsTitle">Credentials &amp; server</string>
+    
+    <string name="PreferenceCategoryGeneral">General</string>
+    
+    <string name="PreferenceGeneralFolderNameTitle">Folder name</string>
+    <string name="PreferenceGeneralFolderNameSummary">Choose the folder name in which Firefox bookmarks will be set.</string>
+    
+    <string name="PreferenceGeneralResetDataTitle">Reset data</string>
+    <string name="PreferenceGeneralResetDataSummary">Delete imported bookmarks from Firefox, and reset the last import date.</string>
+    
+    <string name="PreferenceCategoryDataManagement">Data management</string>
+    
+    <string name="PreferenceCategoryCredentials">Credentials</string>
+    
+    <string name="PreferenceCredentialsUserNameTitle">User name</string>
+    <string name="PreferenceCredentialsUserNameSummary">Enter your Firefox Sync user name.</string>
+    
+    <string name="PreferenceCredentialsPasswordTitle">Password</string>
+    <string name="PreferenceCredentialsPasswordSummary">Enter your Firefox Sync password.</string>
+    
+    <string name="PreferenceCredentialsKeyTitle">Key</string>
+    <string name="PreferenceCredentialsKeySummary">Enter your Firefox Sync key.</string>    
+    
+    <string name="PreferenceCategoryServer">Server</string>
+    
+    <string name="PreferenceCredentialsServerTitle">Server</string>
+    <string name="PreferenceCredentialsServerSummary">Choose the server to import bookmarks from.</string>
+    
+    <string name="PreferenceServerMozilla">Mozilla</string>
+    <string name="PreferenceServerCustom">Custom</string>
+    
+    <string-array name="ServerTitles">
+        <item>@string/PreferenceServerMozilla</item>
+        <item>@string/PreferenceServerCustom</item>
+    </string-array>
+    
+    <string name="MenuTitle">Import Firefox bookmarks</string>
+    
+    <string name="NoCredentialsTitle">No credentials</string>
+    <string name="NoCredentialsMessage">Your credentials to import Firefox bookmarks are not set. Whould you like to set them now?</string>
+    
+    <string name="ImportInProgressTitle">Import in progress</string>
+    <string name="ImportInProgressMessage">An import is already in progress. Please wait for it to finish before launching another one.</string>
+    
+    <string name="NotificationImportStartTickerText">Firefox bookmarks import started.</string>        
+    <string name="NotificationImportTitle">Firefox bookmarks import</string>
+    <string name="NotificationImportMessageCheckLastDate">Check last import date&#8230;</string>
+    <string name="NotificationImportMessageRemovingOldData">Removing old data&#8230;</string>
+    <string name="NotificationImportMessageRetrievingData">Retrieving data %s%% &#8230;</string>
+    <string name="NotificationImportMessageWritingData">Writing data&#8230;</string>
+    <string name="NotificationImportMessageSyncData">Synchronizing data&#8230;</string>
+    
+    <string name="NotificationImportEndTickerText">Firefox bookmarks import done.</string>
+    
+    <string name="NotificationImportEndMessageOk">Import done without errors.</string>
+    <string name="NotificationImportEndMessageOkNoImport">Already up to date, no import done.</string>
+    
+    <string name="NotificationImportEndTitleKo">Error during bookmarks import</string>
+    <string name="NotificationImportEndMessageKo">Click to show error details.</string>
+    
+    <string name="ErrorDetailsActivitySettings">Settings</string>
+    <string name="ErrorDetailsActivityClose">Close</string>
+    <string name="ErrorDetailsActivityMessage">An error occured during Firefox bookmarks import. Details are given below. Most errors are caused by wrong user name, password, or key. Carefully check your credentials.</string>    
+
+    <string name="ResetDataDialogTitle">Reset data</string>
+    <string name="ResetDataDialogMessage">Delete all imported bookmarks from Firefox and reset last import date? This cannot be undone.</string>
+    
+    <string name="ResetDataProgressTitle">Reseting data</string>
+    <string name="ResetDataProgressMessage">Please wait while your datas are reseted.</string>
+    
+</resources>
