@@ -21,7 +21,7 @@
     <string name="AddonShortDescription">Get your Firefox bookmarks in Tint Browser!</string>
     <string name="AddonDescription">This addon retrieve your bookmarks from Firefox Sync service into Tint Browser\'s bookmarks. It uses code from the project Shaman ( https://github.com/emergentdotorg/shaman ), licensed under the Apache v2 license. This addon itself is licensed under the GPLv3 license.</string>
     <!-- Contact can be email or and url -->
-    <string name="AddonContact">http://www.myaddon.org/</string>
+    <string name="AddonContact">https://github.com/Anasthase/TintBrowserFirefoxImporterAddon</string>
     
     <string name="Yes">Yes</string>
     <string name="No">No</string>
