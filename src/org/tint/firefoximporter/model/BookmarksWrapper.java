@@ -15,15 +15,21 @@
 
 package org.tint.firefoximporter.model;
 
+import java.util.ArrayList;
+
+import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.RemoteException;
 
 public class BookmarksWrapper {
 	
-	private static final Uri BOOKMARKS_URI = Uri.parse("content://org.tint.providers.bookmarksprovider/bookmarks");
+	public static final String AUTHORITY = "org.tint.providers.bookmarksprovider";
+	public static final Uri BOOKMARKS_URI = Uri.parse("content://org.tint.providers.bookmarksprovider/bookmarks");
 	
 	public static String[] HISTORY_BOOKMARKS_PROJECTION = new String[] {
 		Columns._ID,
@@ -82,6 +88,45 @@ public class BookmarksWrapper {
 		}
 		
 		return folderId;
+	}
+	
+	public static void deleteFirefoxFolder(ContentResolver contentResolver, String folderName) {
+		long folderId = getFolderId(contentResolver, folderName);
+		if (folderId != -1) {
+			ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+			operations = deleteFolderRecursive(contentResolver, folderId, operations);
+			
+			try {
+				contentResolver.applyBatch(AUTHORITY, operations);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (OperationApplicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private static ArrayList<ContentProviderOperation> deleteFolderRecursive(ContentResolver contentResolver, long folderId, ArrayList<ContentProviderOperation> operations) {
+		Cursor c = getChildrenFolders(contentResolver, folderId);
+		if ((c != null) &&
+				(c.moveToFirst())) {
+			do {
+				
+				long childId = c.getLong(c.getColumnIndex(Columns._ID));
+				operations = deleteFolderRecursive(contentResolver, childId, operations);
+				
+			} while (c.moveToNext());
+		}
+		
+		String whereClause = Columns.PARENT_FOLDER_ID + " = " + folderId;
+		operations.add(ContentProviderOperation.newDelete(BOOKMARKS_URI).withSelection(whereClause, null).build());
+		
+		whereClause = Columns._ID + " = " + folderId;
+		operations.add(ContentProviderOperation.newDelete(BOOKMARKS_URI).withSelection(whereClause, null).build());
+		
+		return operations;
 	}
 	
 	public static long getFolderId(ContentResolver contentResolver, String folderName) {

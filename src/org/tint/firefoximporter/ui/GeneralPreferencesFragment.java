@@ -101,10 +101,9 @@ public class GeneralPreferencesFragment extends PreferenceFragment {
 			editor.putLong(Constants.TECHNICAL_PREFERENCE_LAST_SYNC_DATE, -1);
 			editor.commit();
 			
-			BookmarksWrapper.deleteFirefoxFolderContent(
+			BookmarksWrapper.deleteFirefoxFolder(
 					getActivity().getContentResolver(),
-					prefs.getString(Constants.PREFERENCE_FOLDER_NAME, Constants.DEFAULT_FOLDER_NAME),
-					true);
+					prefs.getString(Constants.PREFERENCE_FOLDER_NAME, Constants.DEFAULT_FOLDER_NAME));
 			
 			mHandler.sendEmptyMessage(0);
 		}		

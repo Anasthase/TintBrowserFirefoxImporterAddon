@@ -39,11 +39,15 @@ import org.tint.firefoximporter.model.BookmarksWrapper;
 import org.tint.firefoximporter.model.WeaveColumns;
 import org.tint.firefoximporter.model.WeaveWrapper;
 
+import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.OperationApplicationException;
 import android.database.Cursor;
+import android.os.RemoteException;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class SyncRunnable implements Runnable {
 	
@@ -75,6 +79,9 @@ public class SyncRunnable implements Runnable {
 	
 	private boolean mError;
 	private String mErrorMessage;
+	
+	private ArrayList<ContentProviderOperation> mOperationsList;
+	private Map<String, Integer> mFoldersMap;
 	
 	private static WeaveFactory getWeaveFactory() {
 		if (mWeaveFactory == null) {
@@ -114,9 +121,27 @@ public class SyncRunnable implements Runnable {
 			mFolderId = BookmarksWrapper.createFirefoxFolder(mContentResolver, mFolderName);
 		}
 		
-		Map<String, Long> foldersMap = createFoldersRecursive("places", mFolderId, null);
+		mOperationsList = null;
+		mFoldersMap = null;
+		createFolderRecursive2("places", -1);
 		
-		createBookmarks(foldersMap);
+		Log.d("createFolderRecursive2", Integer.toString(mFoldersMap.size()));
+		
+		createBookmarks2();
+		
+		try {
+			mContentResolver.applyBatch(BookmarksWrapper.AUTHORITY, mOperationsList);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (OperationApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+//		Map<String, Long> foldersMap = createFoldersRecursive("places", mFolderId, null);
+//		
+//		createBookmarks(foldersMap);
 	}
 	
 	private void createBookmarks(Map<String, Long> foldersMap) {
@@ -153,6 +178,95 @@ public class SyncRunnable implements Runnable {
 				} while (c.moveToNext());
 				
 				BookmarksWrapper.doBulkInsert(mContentResolver, valuesList.toArray(new ContentValues[valuesList.size()]));
+			}
+			
+			c.close();
+		}
+	}
+	
+	private void createBookmarks2() {
+		Cursor c = WeaveWrapper.getBookmarksOnly(mContentResolver);
+		if (c != null) {
+			if (c.moveToFirst()) {
+				
+				int parentIdIndex = c.getColumnIndex(WeaveColumns.WEAVE_BOOKMARKS_WEAVE_PARENT_ID);
+				int titleIndex = c.getColumnIndex(WeaveColumns.WEAVE_BOOKMARKS_TITLE);
+				int urlIndex = c.getColumnIndex(WeaveColumns.WEAVE_BOOKMARKS_URL);
+				
+				do {
+					
+					String weaveParentId = c.getString(parentIdIndex);
+					
+					if (mFoldersMap.containsKey(weaveParentId)) {
+						int parentOperationIndex = mFoldersMap.get(weaveParentId);
+						
+						String title = c.getString(titleIndex);
+						String url = c.getString(urlIndex);
+						
+						mOperationsList.add(ContentProviderOperation.newInsert(BookmarksWrapper.BOOKMARKS_URI)
+								.withValue(BookmarksWrapper.Columns.TITLE, title)
+								.withValue(BookmarksWrapper.Columns.URL, url)
+								.withValue(BookmarksWrapper.Columns.BOOKMARK, 1)
+								.withValue(BookmarksWrapper.Columns.IS_FOLDER, 0)
+								.withValueBackReference(BookmarksWrapper.Columns.PARENT_FOLDER_ID, parentOperationIndex)
+								.build());
+					}
+					
+				} while (c.moveToNext());
+			}
+			
+			c.close();
+		}
+	}
+	
+	private void createFolderRecursive2(String weaveParent, int parentOperationIndex) {
+		
+		if (mOperationsList == null) {
+			mOperationsList = new ArrayList<ContentProviderOperation>();
+		}
+		
+		if (mFoldersMap == null) {
+			mFoldersMap = new HashMap<String, Integer>();
+		}
+		
+		Log.d(weaveParent, Integer.toString(mFoldersMap.size()));
+		
+		Cursor c = WeaveWrapper.getFoldersByParent(mContentResolver, weaveParent);
+		if (c != null) {
+			if (c.moveToFirst()) {
+				
+				int weaveIdIndex = c.getColumnIndex(WeaveColumns.WEAVE_BOOKMARKS_WEAVE_ID);
+				int titleIndex = c.getColumnIndex(WeaveColumns.WEAVE_BOOKMARKS_TITLE);
+				
+				do {
+				
+					String title = c.getString(titleIndex);
+					
+					if (parentOperationIndex == -1) { 
+						mOperationsList.add(ContentProviderOperation.newInsert(BookmarksWrapper.BOOKMARKS_URI)
+								.withValue(BookmarksWrapper.Columns.TITLE, title)
+								.withValue(BookmarksWrapper.Columns.URL, null)
+								.withValue(BookmarksWrapper.Columns.BOOKMARK, 0)
+								.withValue(BookmarksWrapper.Columns.IS_FOLDER, 1)
+								.withValue(BookmarksWrapper.Columns.PARENT_FOLDER_ID, mFolderId)
+								.build());
+					} else {
+						mOperationsList.add(ContentProviderOperation.newInsert(BookmarksWrapper.BOOKMARKS_URI)
+								.withValue(BookmarksWrapper.Columns.TITLE, title)
+								.withValue(BookmarksWrapper.Columns.URL, null)
+								.withValue(BookmarksWrapper.Columns.BOOKMARK, 0)
+								.withValue(BookmarksWrapper.Columns.IS_FOLDER, 1)
+								.withValueBackReference(BookmarksWrapper.Columns.PARENT_FOLDER_ID, parentOperationIndex)
+								.build());
+					}
+					
+					String weaveId = c.getString(weaveIdIndex);
+					
+					mFoldersMap.put(weaveId, mOperationsList.size() - 1);					
+					
+					createFolderRecursive2(weaveId, mOperationsList.size() - 1);
+					
+				} while (c.moveToNext());
 			}
 			
 			c.close();
