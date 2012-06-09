@@ -42,6 +42,8 @@ import android.text.TextUtils;
 
 public class Addon extends BaseAddon implements ISyncListener {
 	
+	private static final int ACTION_ASK_SET_CREDENTIALS = 0;
+	
 	private int mNotificationId;
 	private Notification mNotification;
 	private NotificationManager mNotificationManager;
@@ -106,6 +108,7 @@ public class Addon extends BaseAddon implements ISyncListener {
 		if (!areCredentialsSet()) {
 			result = new ArrayList<Action>();
 			result.add(new AskUserConfirmationAction(
+					ACTION_ASK_SET_CREDENTIALS,
 					mService.getString(R.string.NoCredentialsTitle),
 					mService.getString(R.string.NoCredentialsMessage),
 					mService.getString(R.string.Yes),
@@ -179,7 +182,7 @@ public class Addon extends BaseAddon implements ISyncListener {
 	}
 
 	@Override
-	public List<Action> onUserConfirm(String currentTabId, String questionId, boolean positiveAnswer) throws RemoteException {
+	public List<Action> onUserConfirm(String currentTabId, int questionId, boolean positiveAnswer) throws RemoteException {
 		if (positiveAnswer) {
 			showAddonSettingsActivity();
 		}
@@ -187,13 +190,13 @@ public class Addon extends BaseAddon implements ISyncListener {
 	}
 	
 	@Override
-	public List<Action> onUserInput(String currentTabId, String questionId, boolean cancelled, String userInput) throws RemoteException {
+	public List<Action> onUserInput(String currentTabId, int questionId, boolean cancelled, String userInput) throws RemoteException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	@Override
-	public List<Action> onUserChoice(String currentTabId, String questionId, boolean cancelled, int userChoice) throws RemoteException {
+	public List<Action> onUserChoice(String currentTabId, int questionId, boolean cancelled, int userChoice) throws RemoteException {
 		// TODO Auto-generated method stub
 		return null;
 	}
